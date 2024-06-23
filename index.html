@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power-Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #logo {
+            font-size: 3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        #logo:hover {
+            transform: scale(1.1);
+        }
+        #contact {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .power {
+            color: #ff6600;
+        }
+        .up {
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div id="logo">
+            <span class="power">Power</span><span class="up">-Up</span>
+        </div>
+        <div id="contact">
+            <p>Email: contact@power-up.com</p>
+            <p>Téléphone: +33 1 23 45 67 89</p>
+        </div>
+    </div>
+
+    <script>
+        const logo = document.getElementById('logo');
+        const contact = document.getElementById('contact');
+        let clicked = false;
+
+        logo.addEventListener('click', () => {
+            if (!clicked) {
+                clicked = true;
+                animateLogo();
+            }
+        });
+
+        function animateLogo() {
+            let rotation = 0;
+            const animationInterval = setInterval(() => {
+                rotation += 10;
+                logo.style.transform = `rotate(${rotation}deg)`;
+                if (rotation >= 360) {
+                    clearInterval(animationInterval);
+                    logo.style.transform = 'rotate(0deg)';
+                    showContact();
+                }
+            }, 20);
+        }
+
+        function showContact() {
+            contact.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
