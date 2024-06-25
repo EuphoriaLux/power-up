@@ -3,78 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power-Up</title>
+    <title>Power-Up Collector Deluxe</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            overflow: hidden;
         }
-        #logo {
-            font-size: 3em;
+        #game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        #score, #timer {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        #play-area {
+            position: relative;
+            height: 480px;
+        }
+        .power-up {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
-        #logo:hover {
+        .power-up:hover {
             transform: scale(1.1);
+        }
+        .power-up.red { background: radial-gradient(circle, #ff6b6b, #c44d58); }
+        .power-up.blue { background: radial-gradient(circle, #4ecdc4, #45b7aa); }
+        .power-up.yellow { background: radial-gradient(circle, #feca57, #ff9ff3); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 0.5s infinite;
+        }
+        #message {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 1.2em;
+            color: #ffd700;
         }
         #contact {
             display: none;
-            margin-top: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 10;
             text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        .power {
-            color: #ff6600;
+        #contact h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
         }
-        .up {
-            color: #0066cc;
+        .contact-info {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin-top: 20px;
+            background-color: #4ecdc4;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .button:hover {
+            background-color: #45b7aa;
+            transform: translateY(-3px);
         }
     </style>
 </head>
 <body>
-    <div id="content">
-        <div id="logo">
-            <span class="power">Power</span><span class="up">-Up</span>
+    <div id="game-container">
+        <div id="hud">
+            <div id="score">Score: 0</div>
+            <div id="timer">Temps: 30s</div>
         </div>
+        <div id="play-area"></div>
+        <div id="message">Collectez les Power-Ups!</div>
         <div id="contact">
-            <p>Email: tom@power-up.lu</p>
-            <p>Téléphone: +352 691 93 07 06</p>
+            <h2>Félicitations!</h2>
+            <div class="contact-info">
+                <strong>Email:</strong> tom@power-up.lu
+            </div>
+            <div class="contact-info">
+                <strong>Téléphone:</strong> +352 691 93 07 06
+            </div>
+            <a href="#" class="button" id="playAgain">Rejouer</a>
         </div>
     </div>
-
     <script>
-        const logo = document.getElementById('logo');
-        const contact = document.getElementById('contact');
-        let clicked = false;
+        const playArea = document.getElementById('play-area');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const messageElement = document.getElementById('message');
+        const contactElement = document.getElementById('contact');
+        const playAgainButton = document.getElementById('playAgain');
 
-        logo.addEventListener('click', () => {
-            if (!clicked) {
-                clicked = true;
-                animateLogo();
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        const powerUpTypes = ['red', 'blue', 'yellow'];
+
+        function startGame() {
+            score = 0;
+            timeLeft = 30;
+            updateScore();
+            updateTimer();
+            contactElement.style.display = 'none';
+            messageElement.textContent = 'Collectez les Power-Ups!';
+            playArea.innerHTML = '';
+            gameInterval = setInterval(updateGame, 1000);
+            spawnPowerUp();
+        }
+
+        function updateGame() {
+            timeLeft--;
+            updateTimer();
+            if (timeLeft <= 0) {
+                endGame();
+            } else if (timeLeft % 5 === 0) {
+                spawnPowerUp();
             }
-        });
+        }
 
-        function animateLogo() {
-            let rotation = 0;
-            const animationInterval = setInterval(() => {
-                rotation += 10;
-                logo.style.transform = `rotate(${rotation}deg)`;
-                if (rotation >= 360) {
-                    clearInterval(animationInterval);
-                    logo.style.transform = 'rotate(0deg)';
-                    showContact();
+        function spawnPowerUp() {
+            const powerUp = document.createElement('div');
+            powerUp.className = `power-up ${powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)]} pulse`;
+            powerUp.textContent = 'Power';
+            powerUp.style.left = `${Math.random() * (playArea.offsetWidth - 60)}px`;
+            powerUp.style.top = `${Math.random() * (playArea.offsetHeight - 60)}px`;
+            powerUp.addEventListener('click', collectPowerUp);
+            playArea.appendChild(powerUp);
+
+            setTimeout(() => {
+                if (powerUp.parentNode === playArea) {
+                    playArea.removeChild(powerUp);
                 }
-            }, 20);
+            }, 3000);
+        }
+
+        function collectPowerUp(event) {
+            playArea.removeChild(event.target);
+            score++;
+            updateScore();
+            if (score >= 15) {
+                endGame();
+            } else {
+                spawnPowerUp();
+            }
+        }
+
+        function updateScore() {
+            scoreElement.textContent = `Score: ${score}`;
+        }
+
+        function updateTimer() {
+            timerElement.textContent = `Temps: ${timeLeft}s`;
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            playArea.innerHTML = '';
+            if (score >= 15) {
+                showContact();
+            } else {
+                messageElement.textContent = `Temps écoulé! Score final: ${score}. Essayez encore!`;
+                setTimeout(startGame, 3000);
+            }
         }
 
         function showContact() {
-            contact.style.display = 'block';
+            contactElement.style.display = 'block';
         }
+
+        playAgainButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            startGame();
+        });
+
+        startGame();
     </script>
 </body>
 </html>
