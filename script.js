@@ -108,12 +108,7 @@ function showContact() {
     contactElement.style.display = 'block';
 }
 
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    // Ici, vous pouvez ajouter le code pour envoyer le formulaire
-    alert('Merci pour votre message ! Nous vous contacterons bientôt.');
-    this.reset();
-});
+// Contact form functionality removed
 
 playAgainButton.addEventListener('click', (e) => {
     e.preventDefault();
