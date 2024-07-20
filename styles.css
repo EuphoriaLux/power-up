@@ -94,6 +94,8 @@ body {
     z-index: 10;
     text-align: center;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    max-width: 80%;
+    width: 300px;
 }
 
 #contact h2 {
@@ -104,6 +106,26 @@ body {
 .contact-info {
     margin-bottom: 15px;
     font-size: 1.1em;
+}
+
+#contactForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#contactForm input,
+#contactForm textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#contactForm textarea {
+    height: 100px;
+    resize: vertical;
 }
 
 .button {

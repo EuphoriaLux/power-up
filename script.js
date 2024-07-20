@@ -8,18 +8,40 @@ const playAgainButton = document.getElementById('playAgain');
 let score = 0;
 let timeLeft = 30;
 let gameInterval;
+let level = 1;
 const powerUpTypes = ['red', 'blue', 'yellow'];
 
 function startGame() {
     score = 0;
     timeLeft = 30;
+    level = 1;
     updateScore();
     updateTimer();
+    updateLevel();
     contactElement.style.display = 'none';
     messageElement.textContent = 'Collectez les Power-Ups!';
     playArea.innerHTML = '';
     gameInterval = setInterval(updateGame, 1000);
     spawnPowerUp();
+}
+
+function updateLevel() {
+    level = Math.floor(score / 5) + 1;
+    document.getElementById('levelReached').textContent = level;
+}
+
+function showEncouragement() {
+    const messages = [
+        "Excellent travail !",
+        "Continuez comme ça !",
+        "Vous êtes en feu !",
+        "Incroyable !",
+        "Fantastique !"
+    ];
+    messageElement.textContent = messages[Math.floor(Math.random() * messages.length)];
+    setTimeout(() => {
+        messageElement.textContent = 'Collectez les Power-Ups!';
+    }, 1500);
 }
 
 function updateGame() {
@@ -52,7 +74,11 @@ function collectPowerUp(event) {
     playArea.removeChild(event.target);
     score++;
     updateScore();
-    if (score >= 15) {
+    updateLevel();
+    if (score % 5 === 0) {
+        showEncouragement();
+    }
+    if (score >= 30) {
         endGame();
     } else {
         spawnPowerUp();
@@ -70,10 +96,10 @@ function updateTimer() {
 function endGame() {
     clearInterval(gameInterval);
     playArea.innerHTML = '';
-    if (score >= 15) {
+    if (score >= 30) {
         showContact();
     } else {
-        messageElement.textContent = `Temps écoulé! Score final: ${score}. Essayez encore!`;
+        messageElement.textContent = `Temps écoulé! Score final: ${score}. Niveau atteint: ${level}. Essayez encore!`;
         setTimeout(startGame, 3000);
     }
 }
@@ -81,6 +107,13 @@ function endGame() {
 function showContact() {
     contactElement.style.display = 'block';
 }
+
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Ici, vous pouvez ajouter le code pour envoyer le formulaire
+    alert('Merci pour votre message ! Nous vous contacterons bientôt.');
+    this.reset();
+});
 
 playAgainButton.addEventListener('click', (e) => {
     e.preventDefault();
