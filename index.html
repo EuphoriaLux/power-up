@@ -3,28 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power-Up Collector Deluxe</title>
+    <title>Mini-Jeux Collection</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-container">
-        <div id="hud">
-            <div id="score">Score: 0</div>
-            <div id="timer">Temps: 30s</div>
+    <div id="main-container">
+        <h1>Mini-Jeux Collection</h1>
+        <div id="game-selection">
+            <button class="game-button" data-game="power-up-collector">Power-Up Collector</button>
+            <!-- Add more game buttons here as you create them -->
         </div>
-        <div id="play-area"></div>
-        <div id="message">Collectez les Power-Ups!</div>
-        <div id="contact">
-            <h2>Félicitations!</h2>
-            <p>Vous avez atteint le niveau <span id="levelReached"></span>!</p>
-            <p>Pour nous contacter, veuillez utiliser les informations ci-dessous :</p>
-            <div class="contact-info">
-                <strong>Email:</strong> tom@power-up.lu
+        <div id="game-container">
+            <div id="power-up-collector" class="game">
+                <div id="hud">
+                    <div id="score">Score: 0</div>
+                    <div id="timer">Temps: 30s</div>
+                </div>
+                <div id="play-area"></div>
+                <div id="message">Collectez les Power-Ups!</div>
+                <div id="contact">
+                    <h2>Félicitations!</h2>
+                    <p>Vous avez atteint le niveau <span id="levelReached"></span>!</p>
+                    <p>Pour nous contacter, veuillez utiliser les informations ci-dessous :</p>
+                    <div class="contact-info">
+                        <strong>Email:</strong> tom@power-up.lu
+                    </div>
+                    <div class="contact-info">
+                        <strong>Téléphone:</strong> +352 691 93 07 06
+                    </div>
+                    <a href="#" class="button" id="playAgain">Rejouer</a>
+                </div>
             </div>
-            <div class="contact-info">
-                <strong>Téléphone:</strong> +352 691 93 07 06
-            </div>
-            <a href="#" class="button" id="playAgain">Rejouer</a>
+            <!-- Add more game divs here as you create them -->
         </div>
     </div>
     <script src="script.js"></script>

@@ -1,3 +1,27 @@
+const gameButtons = document.querySelectorAll('.game-button');
+const games = document.querySelectorAll('.game');
+
+gameButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const gameId = button.getAttribute('data-game');
+        showGame(gameId);
+    });
+});
+
+function showGame(gameId) {
+    games.forEach(game => {
+        game.classList.remove('active');
+    });
+    const selectedGame = document.getElementById(gameId);
+    selectedGame.classList.add('active');
+    
+    if (gameId === 'power-up-collector') {
+        startPowerUpCollector();
+    }
+    // Add more game initializations here as you create them
+}
+
+// Power-Up Collector Game
 const playArea = document.getElementById('play-area');
 const scoreElement = document.getElementById('score');
 const timerElement = document.getElementById('timer');
@@ -11,7 +35,7 @@ let gameInterval;
 let level = 1;
 const powerUpTypes = ['red', 'blue', 'yellow'];
 
-function startGame() {
+function startPowerUpCollector() {
     score = 0;
     timeLeft = 30;
     level = 1;
