@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini-Jeux Collection</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="games/power-up-collector/power-up-collector.css">
+    <!-- Add more game-specific CSS files here as you create them -->
 </head>
 <body>
     <div id="main-container">
@@ -15,15 +17,15 @@
         </div>
         <div id="game-container">
             <div id="power-up-collector" class="game">
-                <div id="hud">
-                    <div id="score">Score: 0</div>
-                    <div id="timer">Temps: 30s</div>
+                <div id="power-up-collector-hud">
+                    <div id="power-up-collector-score">Score: 0</div>
+                    <div id="power-up-collector-timer">Temps: 30s</div>
                 </div>
-                <div id="play-area"></div>
-                <div id="message">Collectez les Power-Ups!</div>
-                <div id="contact">
+                <div id="power-up-collector-play-area"></div>
+                <div id="power-up-collector-message">Collectez les Power-Ups!</div>
+                <div id="power-up-collector-contact">
                     <h2>Félicitations!</h2>
-                    <p>Vous avez atteint le niveau <span id="levelReached"></span>!</p>
+                    <p>Vous avez atteint le niveau <span id="power-up-collector-levelReached"></span>!</p>
                     <p>Pour nous contacter, veuillez utiliser les informations ci-dessous :</p>
                     <div class="contact-info">
                         <strong>Email:</strong> tom@power-up.lu
@@ -31,12 +33,12 @@
                     <div class="contact-info">
                         <strong>Téléphone:</strong> +352 691 93 07 06
                     </div>
-                    <a href="#" class="button" id="playAgain">Rejouer</a>
+                    <a href="#" class="button" id="power-up-collector-playAgain">Rejouer</a>
                 </div>
             </div>
             <!-- Add more game divs here as you create them -->
         </div>
     </div>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
