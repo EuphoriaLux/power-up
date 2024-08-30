@@ -1,4 +1,0 @@
-source "https://rubygems.org"
-
-gem "github-pages"
-gem "webrick"  # Needed for Ruby versions >= 3.0
