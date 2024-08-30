@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Générateur de Factures</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,6 +44,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-right: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -75,13 +77,18 @@
             <label for="items">Articles (un par ligne, format: nom article, quantité, prix):</label>
             <textarea id="items" rows="5" required></textarea>
             
-            <button type="submit">Générer la Facture</button>
+            <div>
+                <button type="submit">Générer la Facture</button>
+                <button type="button" id="downloadPdf" style="display:none;">Télécharger PDF</button>
+            </div>
         </form>
         
         <div id="invoice"></div>
     </div>
     <a href="index.html" class="button" style="position: fixed; top: 10px; left: 10px;">Retour à l'accueil</a>
     <script>
+        const { jsPDF } = window.jspdf;
+
         document.getElementById('invoiceForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -132,6 +139,22 @@
             `;
             
             document.getElementById('invoice').innerHTML = invoiceHtml;
+            document.getElementById('downloadPdf').style.display = 'inline-block';
+        });
+
+        document.getElementById('downloadPdf').addEventListener('click', function() {
+            const doc = new jsPDF();
+            const invoice = document.getElementById('invoice');
+
+            doc.html(invoice, {
+                callback: function(doc) {
+                    doc.save('facture.pdf');
+                },
+                x: 15,
+                y: 15,
+                width: 170,
+                windowWidth: 650
+            });
         });
     </script>
 </body>
