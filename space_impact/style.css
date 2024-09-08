@@ -1,0 +1,113 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #0f0f23;
+    color: #ffffff;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+#game-area {
+    width: 800px;
+    height: 600px;
+    border: 2px solid #00ffff;
+    position: relative;
+    overflow: hidden;
+    background-image: url('https://opengameart.org/sites/default/files/space_background_1.png');
+    background-size: cover;
+}
+
+.spaceship {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 20px;
+    transition: left 0.1s ease-out;
+}
+
+.power-up {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    background-color: #ffff00;
+    border-radius: 50%;
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 5px #ffff00; }
+    to { box-shadow: 0 0 20px #ffff00; }
+}
+
+#score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+}
+
+#end-game {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.menu {
+    text-align: center;
+}
+
+.menu button {
+    background-color: #00ffff;
+    color: #0f0f23;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu button:hover {
+    background-color: #ffffff;
+    transform: scale(1.1);
+}
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#game-over button {
+    background-color: #00ffff;
+    color: #0f0f23;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}

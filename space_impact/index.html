@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Impact - Luxembourg Mystery</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #00ff00;
+            overflow: hidden;
+        }
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        #game-area {
+            width: 800px;
+            height: 600px;
+            border: 2px solid #00ff00;
+            position: relative;
+            overflow: hidden;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Luxembourg_City_Night.jpg/1200px-Luxembourg_City_Night.jpg');
+            background-size: cover;
+            box-shadow: 0 0 20px #00ff00;
+        }
+        .spaceship {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            bottom: 20px;
+            transition: left 0.1s ease-out;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .enemy {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            background-color: #ff0000;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .projectile {
+            width: 5px;
+            height: 15px;
+            background-color: #00ff00;
+            position: absolute;
+            box-shadow: 0 0 5px #00ff00;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5rem;
+        }
+        #end-game {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff0000;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .menu, #game-over {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .menu button, #game-over button {
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .menu button:hover, #game-over button:hover {
+            background-color: #ffffff;
+            transform: scale(1.1);
+        }
+        #contact-info {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const Game = () => {
+            const [gameState, setGameState] = React.useState('start');
+            const [playerType, setPlayerType] = React.useState(null);
+            const [score, setScore] = React.useState(0);
+            const [playerPosition, setPlayerPosition] = React.useState(50);
+            const [enemies, setEnemies] = React.useState([]);
+            const [projectiles, setProjectiles] = React.useState([]);
+            const [highScore, setHighScore] = React.useState(0);
+            const [keys, setKeys] = React.useState({});
+            const [showContact, setShowContact] = React.useState(false);
+
+            React.useEffect(() => {
+                const storedHighScore = localStorage.getItem('highScore');
+                if (storedHighScore) setHighScore(parseInt(storedHighScore));
+
+                const handleKeyDown = (e) => setKeys(prev => ({ ...prev, [e.key]: true }));
+                const handleKeyUp = (e) => setKeys(prev => ({ ...prev, [e.key]: false }));
+
+                window.addEventListener('keydown', handleKeyDown);
+                window.addEventListener('keyup', handleKeyUp);
+                return () => {
+                    window.removeEventListener('keydown', handleKeyDown);
+                    window.removeEventListener('keyup', handleKeyUp);
+                };
+            }, []);
+
+            React.useEffect(() => {
+                if (gameState === 'playing') {
+                    const gameLoop = setInterval(() => {
+                        if (keys.ArrowLeft) {
+                            setPlayerPosition(prev => Math.max(0, prev - 2));
+                        }
+                        if (keys.ArrowRight) {
+                            setPlayerPosition(prev => Math.min(95, prev + 2));
+                        }
+                        if (keys[' ']) {
+                            shoot();
+                        }
+
+                        setEnemies(prev => {
+                            if (prev.length < 5 && Math.random() < 0.05) {
+                                return [...prev, {
+                                    id: Date.now(),
+                                    position: Math.random() * 90,
+                                    top: 0,
+                                }];
+                            }
+                            return prev;
+                        });
+
+                        setEnemies(prev => 
+                            prev.map(enemy => ({
+                                ...enemy,
+                                top: enemy.top + 1,
+                            })).filter(enemy => enemy.top < 100)
+                        );
+
+                        setProjectiles(prev => 
+                            prev.map(proj => ({
+                                ...proj,
+                                top: proj.top - 2,
+                            })).filter(proj => proj.top > 0)
+                        );
+
+                        // Collision detection
+                        setEnemies(prevEnemies => {
+                            let newScore = score;
+                            const updatedEnemies = prevEnemies.filter(enemy => {
+                                const hitByProjectile = projectiles.some(
+                                    proj => Math.abs(proj.position - enemy.position) < 5 && Math.abs(proj.top - enemy.top) < 5
+                                );
+                                if (hitByProjectile) {
+                                    newScore += 1;
+                                }
+                                return !hitByProjectile;
+                            });
+                            if (newScore !== score) {
+                                setScore(newScore);
+                                if (newScore >= 50 && !showContact) {
+                                    setShowContact(true);
+                                }
+                            }
+                            return updatedEnemies;
+                        });
+
+                        setProjectiles(prevProjectiles => 
+                            prevProjectiles.filter(proj => !enemies.some(
+                                enemy => Math.abs(proj.position - enemy.position) < 5 && Math.abs(proj.top - enemy.top) < 5
+                            ))
+                        );
+                    }, 20);
+
+                    return () => clearInterval(gameLoop);
+                }
+            }, [gameState, keys, score, projectiles, enemies, showContact]);
+
+            const startGame = (type) => {
+                setPlayerType(type);
+                setGameState('playing');
+                setScore(0);
+                setProjectiles([]);
+                setEnemies([]);
+                setShowContact(false);
+            };
+
+            const shoot = () => {
+                setProjectiles(prev => [
+                    ...prev,
+                    {
+                        id: Date.now(),
+                        position: playerPosition,
+                        top: 80,
+                    },
+                ]);
+            };
+
+            const endGame = () => {
+                setGameState('end');
+                if (score > highScore) {
+                    setHighScore(score);
+                    localStorage.setItem('highScore', score);
+                }
+            };
+
+            return (
+                <div id="game-container">
+                    <h1>Luxembourg Mystery</h1>
+                    {gameState === 'start' && (
+                        <div className="menu">
+                            <h2>Choose your spaceship:</h2>
+                            <button onClick={() => startGame('detective')}>Detective</button>
+                            <button onClick={() => startGame('spy')}>Spy</button>
+                        </div>
+                    )}
+                    {gameState === 'playing' && (
+                        <div id="game-area">
+                            <div
+                                className="spaceship"
+                                style={{
+                                    left: `${playerPosition}%`,
+                                    backgroundImage: `url(${playerType === 'detective' ? 'male_ship.png' : 'spy.png'})`,
+                                }}
+                            ></div>
+                            {enemies.map((enemy) => (
+                                <div
+                                    key={enemy.id}
+                                    className="enemy"
+                                    style={{ left: `${enemy.position}%`, top: `${enemy.top}%` }}
+                                ></div>
+                            ))}
+                            {projectiles.map((proj) => (
+                                <div
+                                    key={proj.id}
+                                    className="projectile"
+                                    style={{ left: `${proj.position}%`, bottom: `${100 - proj.top}%` }}
+                                ></div>
+                            ))}
+                            <div id="score">Score: {score}</div>
+                            <button id="end-game" onClick={endGame}>End Game</button>
+                            {showContact && (
+                                <div id="contact-info">
+                                    <p>Contact le mystérieux Luxembourgeois:</p>
+                                    <p>Email: mysterious@luxembourg.lu</p>
+                                    <p>Téléphone: +352 123 456</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {gameState === 'end' && (
+                        <div id="game-over">
+                            <h2>Game Over</h2>
+                            <p>Your score: {score}</p>
+                            <p>High score: {highScore}</p>
+                            {score >= 50 && (
+                                <div>
+                                    <p>Vous avez débloqué les coordonnées du mystérieux Luxembourgeois :</p>
+                                    <p>Email: mysterious@luxembourg.lu</p>
+                                    <p>Téléphone: +352 123 456</p>
+                                </div>
+                            )}
+                            <button onClick={() => setGameState('start')}>Play Again</button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.render(
+            <React.StrictMode>
+                <Game />
+            </React.StrictMode>,
+            document.getElementById('root')
+        );
+    </script>
+</body>
+</html>
