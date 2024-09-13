@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Factures</title>
+    <!-- Include jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Link to External CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Générateur de Factures</h1>
+        <form id="invoiceForm">
+            <label for="invoiceNumber">Numéro de Facture:</label>
+            <input type="text" id="invoiceNumber" required>
+            
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+            
+            <label for="customerName">Nom du Client:</label>
+            <input type="text" id="customerName" required>
+            
+            <label for="customerEmail">Email du Client:</label>
+            <input type="email" id="customerEmail" required>
+            
+            <label for="items">Articles (un par ligne, format: nom article, quantité, prix):</label>
+            <textarea id="items" rows="5" required></textarea>
+            
+            <div>
+                <button type="submit">Générer la Facture</button>
+                <button type="button" id="downloadPdf" style="display:none;">Télécharger PDF</button>
+            </div>
+        </form>
+        
+        <div id="invoice"></div>
+    </div>
+    <a href="index.html" class="button" style="position: fixed; top: 10px; left: 10px;">Retour à l'accueil</a>
+    <!-- Link to External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
