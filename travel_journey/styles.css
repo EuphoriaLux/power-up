@@ -1,0 +1,130 @@
+/* styles.css */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f8ff;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #0077be;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#itinerary-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#map {
+    width: 100%;
+    height: 500px; /* Adjusted height for better visibility */
+    border: 2px solid #0077be;
+    border-radius: 8px;
+}
+
+/* Itinerary Items */
+.itinerary-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.itinerary-item:hover {
+    transform: translateY(-5px);
+}
+
+.itinerary-header {
+    background-color: #0077be;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.itinerary-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.itinerary-body {
+    padding: 15px;
+}
+
+.itinerary-body h2 {
+    margin-bottom: 10px;
+    color: #0077be;
+}
+
+.itinerary-body p {
+    margin-bottom: 5px;
+}
+
+footer {
+    background-color: #0077be;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    main {
+        flex-direction: row;
+    }
+
+    #itinerary-container {
+        flex: 1;
+        overflow-y: auto;
+        max-height: 80vh; /* To prevent overflow */
+    }
+
+    #map {
+        flex: 2;
+        height: 700px; /* Increased height for larger screens */
+    }
+
+    .itinerary-item {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    #map {
+        height: 800px;
+    }
+}

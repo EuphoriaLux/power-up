@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schöne Flusskreuzfahrt Reiseroute</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <!-- Add favicon (optional) -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <h1>Unsere Flusskreuzfahrt Reiseroute</h1>
+    </header>
+    
+    <main>
+        <div id="itinerary-container">
+            <!-- Reiseroute wird hier dynamisch eingefügt -->
+        </div>
+        <div id="map"></div> <!-- Kartencontainer -->
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Ihre Kreuzfahrtgesellschaft</p>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <!-- Corrected Leaflet.PolylineDecorator JS from CDNJS -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-polylinedecorator/1.7.0/leaflet.polylineDecorator.min.js"
+      integrity="sha512-nJeOCfP8mKwuPqgv5SNfsPWWi+Gryaz7X8Vgd5HPdUd3O3l2mE/3rrVjRkB8v4NmrPJOT8CRdEdVYlVvRfWrZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- Your custom script -->
+    <script src="script.js"></script>
+</body>
+</html>
